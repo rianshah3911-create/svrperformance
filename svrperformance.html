@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SVR Performance | Elite Automotive Specialists — Nairobi</title>
+<link rel="icon" type="image/png" href="logo (1).png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --red:#C8282A; --red-light:#E03335;
+  --white:#F2F2F2; --gray:#9A9A9A; --gray-light:#C8C8C8;
+  --dark:#090909; --dark2:#0F0F0F; --dark3:#171717; --dark4:#1E1E1E;
+  --border:rgba(255,255,255,.07); --border-red:rgba(200,40,42,.22);
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--dark);color:var(--white);font-family:'Rajdhani',sans-serif;font-weight:400;overflow-x:hidden;cursor:none;}
+
+/* ── Page loader ── */
+#loader{position:fixed;inset:0;background:#000;z-index:99999;display:flex;align-items:center;justify-content:center;transition:opacity .6s ease .2s,visibility .6s ease .2s;}
+#loader.done{opacity:0;visibility:hidden;}
+.loader-logo{height:80px;width:auto;object-fit:contain;animation:loaderPulse 1s ease infinite alternate;}
+@keyframes loaderPulse{from{opacity:.3;transform:scale(.96);}to{opacity:1;transform:scale(1);}}
+
+/* ── Scroll progress ── */
+#progress{position:fixed;top:0;left:0;height:2px;background:var(--red);z-index:9997;transform-origin:left;transform:scaleX(0);transition:transform .08s linear;}
+
+/* ── Cursor ── */
+.cursor{position:fixed;width:9px;height:9px;background:var(--red);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .18s,height .18s;}
+.cursor-ring{position:fixed;width:30px;height:30px;border:1px solid rgba(200,40,42,.55);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:all .14s ease;}
+::-webkit-scrollbar{width:3px;}
+::-webkit-scrollbar-track{background:var(--dark);}
+::-webkit-scrollbar-thumb{background:var(--red);}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:center;justify-content:space-between;padding:0 6%;height:70px;background:rgba(9,9,9,.97);backdrop-filter:blur(18px);border-bottom:1px solid var(--border-red);transition:height .3s;}
+nav.scrolled{height:58px;}
+.nav-logo{display:flex;align-items:center;gap:12px;text-decoration:none;}
+.nav-logo-img{height:36px;width:auto;object-fit:contain;display:block;}
+.nav-logo-text{font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:3px;color:var(--white);line-height:1;}
+.nav-logo-text small{display:block;font-family:'Rajdhani',sans-serif;font-size:9px;letter-spacing:4px;color:var(--gray);font-weight:600;text-transform:uppercase;margin-top:2px;}
+.nav-links{display:flex;gap:36px;list-style:none;}
+.nav-links a{text-decoration:none;color:rgba(242,242,242,.8);font-size:11px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;position:relative;transition:color .3s;}
+.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:1px;background:var(--red);transform:scaleX(0);transform-origin:left;transition:transform .3s;}
+.nav-links a:hover{color:var(--white);}
+.nav-links a:hover::after{transform:scaleX(1);}
+nav.scrolled .nav-links a{color:var(--gray);}
+.nav-cta{background:var(--red)!important;color:#fff!important;padding:7px 18px;clip-path:polygon(6% 0%,100% 0%,94% 100%,0% 100%);transition:background .3s!important;}
+.nav-cta:hover{background:var(--red-light)!important;}
+.nav-cta::after{display:none!important;}
+.nav-toggle{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:4px;}
+.nav-toggle span{width:22px;height:1.5px;background:var(--white);transition:all .3s;}
+
+/* ── HERO — pure image, no text ── */
+.hero{height:100vh;min-height:600px;position:relative;overflow:hidden;background:#000;}
+.hero-bg{position:absolute;inset:0;background-image:url('WhatsApp%20Image%202026-04-24%20at%2021.13.19.jpeg');background-size:cover;background-position:center 50%;filter:brightness(.85);background-color:#000;}
+.hero-vignette{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.3) 0%,rgba(0,0,0,0) 40%,rgba(0,0,0,.6) 100%);}
+
+/* ── TAGLINE STRIP ── */
+.tagline-strip{background:var(--dark2);padding:34px 6%;border-top:1px solid var(--border-red);border-bottom:1px solid var(--border);display:flex;flex-direction:column;align-items:center;text-align:center;position:relative;overflow:hidden;}
+.tagline-strip::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--red),transparent);}
+.tagline-main{font-family:'Bebas Neue',sans-serif;font-size:clamp(24px,3.2vw,46px);letter-spacing:4px;color:var(--white);line-height:1;}
+.tagline-main .accent{color:var(--red);}
+.tagline-divider{width:1px;height:24px;background:var(--border-red);margin:10px 0;}
+.tagline-sub{font-size:clamp(10px,1.2vw,13px);letter-spacing:4px;color:var(--gray);text-transform:uppercase;font-weight:600;}
+
+/* ── SECTION BASE ── */
+section{padding:100px 6%;}
+.sec-eyebrow{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+.sec-eyebrow-line{width:30px;height:1px;background:var(--red);}
+.sec-eyebrow-text{font-size:10px;letter-spacing:4px;color:var(--red);text-transform:uppercase;font-weight:600;}
+.sec-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(36px,4.2vw,64px);letter-spacing:2px;line-height:1;margin-bottom:14px;}
+.sec-title .light{color:var(--gray-light);}
+.sec-desc{font-size:15px;color:var(--gray);line-height:1.75;max-width:480px;letter-spacing:.3px;}
+
+/* ── SERVICES ── */
+.services{background:var(--dark3);padding-bottom:80px;}
+.services-top{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:52px;flex-wrap:wrap;gap:24px;}
+.services-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin-bottom:56px;}
+.svc-card{position:relative;height:300px;overflow:hidden;cursor:pointer;transform-style:preserve-3d;}
+.svc-img{position:absolute;inset:0;background-size:cover;background-position:center;background-color:var(--dark4);transition:transform .65s ease,filter .45s ease;filter:brightness(.58);}
+.svc-card:hover .svc-img{transform:scale(1.07);filter:brightness(.42);}
+.svc-gradient{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.96) 0%,rgba(0,0,0,.1) 65%,transparent 100%);}
+.svc-body{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:24px 22px;}
+.svc-icon{width:30px;height:30px;color:var(--red);margin-bottom:10px;opacity:0;transform:translateY(6px);transition:opacity .3s ease .05s,transform .3s ease .05s;}
+.svc-card:hover .svc-icon{opacity:1;transform:translateY(0);}
+.svc-name{font-family:'Bebas Neue',sans-serif;font-size:19px;letter-spacing:2px;color:#fff;margin-bottom:6px;}
+.svc-desc{font-size:12px;color:var(--gray-light);line-height:1.55;letter-spacing:.3px;max-height:0;overflow:hidden;opacity:0;transition:max-height .4s ease,opacity .35s ease;}
+.svc-card:hover .svc-desc{max-height:72px;opacity:1;}
+.svc-num{position:absolute;top:16px;right:18px;font-family:'Bebas Neue',sans-serif;font-size:44px;color:rgba(255,255,255,.05);line-height:1;}
+.svc-bar{position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--red);transform:scaleX(0);transform-origin:left;transition:transform .4s ease;}
+.svc-card:hover .svc-bar{transform:scaleX(1);}
+.svc-book{display:inline-flex;align-items:center;gap:6px;margin-top:10px;padding:7px 16px;background:var(--red);color:#fff;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;text-decoration:none;clip-path:polygon(5% 0%,100% 0%,95% 100%,0% 100%);opacity:0;transform:translateY(8px);transition:opacity .3s ease .08s,transform .3s ease .08s,background .2s;}
+.svc-card:hover .svc-book{opacity:1;transform:translateY(0);}
+.svc-book:hover{background:var(--red-light);}
+
+.services-cta{display:flex;justify-content:center;align-items:center;gap:22px;flex-wrap:wrap;}
+.services-cta-note{font-size:13px;color:var(--gray);letter-spacing:.5px;}
+.services-cta-note a{color:var(--gray-light);text-decoration:none;transition:color .3s;}
+.services-cta-note a:hover{color:var(--red);}
+
+/* ── BUTTONS ── */
+.btn-primary{display:inline-flex;align-items:center;gap:10px;background:var(--red);color:#fff;padding:14px 34px;text-decoration:none;font-size:12px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;clip-path:polygon(7% 0%,100% 0%,93% 100%,0% 100%);transition:all .3s;position:relative;overflow:hidden;border:none;cursor:pointer;font-family:'Rajdhani',sans-serif;}
+.btn-primary::before{content:'';position:absolute;inset:0;background:rgba(255,255,255,.1);transform:translateX(-100%);transition:transform .4s;}
+.btn-primary:hover::before{transform:translateX(0);}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(200,40,42,.4);}
+.btn-primary svg{width:15px;height:15px;flex-shrink:0;}
+
+/* ── ABOUT ── */
+.about{background:var(--dark);position:relative;}
+.about-inner{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;}
+.about-points{display:flex;flex-direction:column;margin-top:40px;}
+.about-point{display:flex;align-items:flex-start;gap:18px;padding:20px 0;border-bottom:1px solid var(--border);}
+.about-point:first-child{border-top:1px solid var(--border);}
+.about-point-icon{width:34px;height:34px;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:var(--red);}
+.about-point-icon svg{width:20px;height:20px;}
+.about-point-title{font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:3px;color:var(--white);}
+.about-point-desc{font-size:13px;color:var(--gray);line-height:1.55;}
+.about-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);margin-top:44px;}
+.about-metric{background:var(--dark);padding:24px 20px;transition:background .3s;}
+.about-metric:hover{background:var(--dark3);}
+.about-metric-num{font-family:'Bebas Neue',sans-serif;font-size:42px;color:var(--white);line-height:1;letter-spacing:2px;}
+.about-metric-num .accent{color:var(--red);}
+.about-metric-label{font-size:9px;letter-spacing:3px;color:var(--gray);text-transform:uppercase;font-weight:600;margin-top:3px;}
+.about-visual{position:relative;height:520px;}
+.about-img-main{position:absolute;top:0;left:20px;right:0;bottom:60px;background-image:url('WhatsApp Image 2026-04-24 at 20.10.59 (2).jpeg');background-size:cover;background-position:center;filter:brightness(.72);overflow:hidden;}
+.about-img-main::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(200,40,42,.08),transparent);}
+.about-img-accent{position:absolute;bottom:0;left:0;width:52%;height:44%;background-image:url('WhatsApp%20Image%202026-04-24%20at%2020.11.00.jpeg');background-size:cover;background-position:center;filter:brightness(.72);border:5px solid var(--dark);}
+.about-tag{position:absolute;top:20px;right:0;background:var(--red);color:#fff;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:9px 18px;clip-path:polygon(0 0,100% 0,90% 100%,0 100%);}
+
+/* ── GALLERY ── */
+.gallery{padding:0;background:var(--dark2);}
+.gallery-header{padding:80px 6% 44px;}
+.gallery-grid{display:grid;grid-template-columns:2fr 1fr 1fr;grid-template-rows:280px 280px;gap:2px;}
+.gal-item{position:relative;overflow:hidden;}
+.gal-item:first-child{grid-row:1/3;}
+.gal-img{width:100%;height:100%;object-fit:cover;display:block;filter:brightness(.62);transition:transform .7s ease,filter .4s ease;}
+.gal-item:hover .gal-img{transform:scale(1.06);filter:brightness(.82);}
+.gal-overlay{position:absolute;inset:0;display:flex;align-items:flex-end;padding:18px;background:linear-gradient(to top,rgba(0,0,0,.75) 0%,transparent 55%);opacity:0;transition:opacity .4s;}
+.gal-item:hover .gal-overlay{opacity:1;}
+.gal-label{font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:2px;color:#fff;}
+
+/* ── VIDEOS — Instagram Reels format (9:16) ── */
+.videos{background:var(--dark3);}
+.videos-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:52px;flex-wrap:wrap;gap:24px;}
+.videos-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:3px;}
+.video-wrap{position:relative;padding-bottom:177.78%;overflow:hidden;background:var(--dark4);}
+.video-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:none;}
+.video-placeholder{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;cursor:pointer;transition:background .3s;}
+.video-placeholder:hover{background:rgba(200,40,42,.05);}
+.video-placeholder-bg{position:absolute;inset:0;background-size:cover;background-position:center;filter:brightness(.28);transition:filter .4s;}
+.video-placeholder:hover .video-placeholder-bg{filter:brightness(.4);}
+.play-btn{position:relative;z-index:2;width:56px;height:56px;background:rgba(200,40,42,.9);border-radius:50%;display:flex;align-items:center;justify-content:center;transition:transform .3s,background .3s;box-shadow:0 0 0 8px rgba(200,40,42,.15);}
+.video-placeholder:hover .play-btn{transform:scale(1.1);background:var(--red);box-shadow:0 0 0 12px rgba(200,40,42,.2);}
+.play-btn svg{width:20px;height:20px;color:#fff;margin-left:3px;}
+.video-meta{position:relative;z-index:2;text-align:center;padding:0 16px;}
+.video-title{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:2px;color:var(--white);}
+.video-sub{font-size:10px;letter-spacing:2px;color:var(--gray);text-transform:uppercase;margin-top:4px;}
+/* Upload guide strip */
+.video-guide{margin-top:40px;background:var(--dark4);border:1px solid var(--border-red);padding:24px 28px;display:flex;align-items:flex-start;gap:18px;}
+.video-guide-icon{color:var(--red);flex-shrink:0;margin-top:2px;}
+.video-guide-icon svg{width:20px;height:20px;}
+.video-guide h4{font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:2px;color:var(--white);margin-bottom:8px;}
+.video-guide p{font-size:13px;color:var(--gray);line-height:1.65;letter-spacing:.3px;}
+.video-guide code{background:var(--dark3);color:var(--red-light);padding:2px 7px;font-size:12px;letter-spacing:0;}
+
+/* ── HOURS ── */
+.hours{background:var(--dark);}
+.hours-inner{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start;}
+.hours-table{border:1px solid var(--border);}
+.hours-row{display:flex;justify-content:space-between;align-items:center;padding:15px 22px;border-bottom:1px solid rgba(255,255,255,.04);transition:background .3s;}
+.hours-row:last-child{border-bottom:none;}
+.hours-row:hover{background:var(--dark3);}
+.hours-day{font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--white);}
+.hours-time{font-size:13px;color:var(--gray);font-family:'Inter',sans-serif;display:flex;align-items:center;gap:10px;}
+.badge{font-size:8px;letter-spacing:2px;padding:3px 9px;text-transform:uppercase;font-weight:700;}
+.badge-open{background:rgba(76,175,80,.1);color:#4CAF50;border:1px solid rgba(76,175,80,.2);}
+.badge-limited{background:rgba(255,160,0,.1);color:#FFA000;border:1px solid rgba(255,160,0,.2);}
+.hours-contact{margin-top:44px;display:flex;flex-direction:column;gap:22px;}
+.contact-item{display:flex;gap:16px;align-items:flex-start;}
+.contact-icon{width:38px;height:38px;flex-shrink:0;background:rgba(200,40,42,.08);border:1px solid var(--border-red);display:flex;align-items:center;justify-content:center;color:var(--red);clip-path:polygon(10% 0%,100% 0%,90% 100%,0% 100%);}
+.contact-icon svg{width:17px;height:17px;}
+.contact-label{font-size:9px;letter-spacing:3px;color:var(--gray);text-transform:uppercase;font-weight:600;margin-bottom:4px;}
+.contact-val{font-size:14px;color:var(--white);font-weight:500;line-height:1.5;}
+.contact-val a{color:var(--gray-light);text-decoration:none;transition:color .3s;}
+.contact-val a:hover{color:var(--red);}
+
+/* ── BOOKING ── */
+.booking{background:var(--dark2);position:relative;overflow:hidden;}
+.booking-inner{display:grid;grid-template-columns:1fr 1.55fr;gap:80px;position:relative;z-index:1;}
+.booking-features{display:flex;flex-direction:column;gap:12px;margin-top:30px;}
+.booking-feat{display:flex;align-items:center;gap:12px;font-size:13px;font-weight:500;letter-spacing:.5px;color:var(--gray);}
+.booking-feat svg{width:14px;height:14px;color:var(--red);flex-shrink:0;}
+.booking-form{background:var(--dark3);padding:44px;border:1px solid var(--border);position:relative;}
+.booking-form::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--red),transparent);}
+.form-sec-title{font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:3px;color:var(--red);margin-bottom:18px;margin-top:26px;padding-bottom:9px;border-bottom:1px solid var(--border-red);}
+.form-sec-title:first-child{margin-top:0;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.form-group{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;}
+.form-group label{font-size:9px;letter-spacing:2.5px;color:var(--gray);text-transform:uppercase;font-weight:700;}
+.form-group label .req{color:var(--red);}
+.form-group input,.form-group select,.form-group textarea{background:var(--dark4);border:1px solid var(--border);color:var(--white);padding:11px 14px;font-size:14px;font-family:'Rajdhani',sans-serif;font-weight:400;transition:all .3s;outline:none;appearance:none;-webkit-appearance:none;clip-path:polygon(3% 0%,100% 0%,97% 100%,0% 100%);}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--red);background:rgba(200,40,42,.04);}
+.form-group input::placeholder,.form-group textarea::placeholder{color:rgba(155,155,155,.4);font-size:13px;}
+.form-group select option{background:var(--dark4);color:var(--white);}
+.form-group textarea{resize:vertical;min-height:88px;}
+.time-slots{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-top:2px;}
+.time-slot{background:var(--dark4);border:1px solid var(--border);color:var(--gray);padding:9px 4px;font-size:10px;font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:.8px;text-align:center;cursor:pointer;transition:all .22s;clip-path:polygon(5% 0%,100% 0%,95% 100%,0% 100%);}
+.time-slot:hover{border-color:var(--red);color:var(--white);background:rgba(200,40,42,.08);}
+.time-slot.selected{background:var(--red);border-color:var(--red);color:#fff;}
+.form-submit{display:flex;gap:12px;align-items:center;margin-top:26px;flex-wrap:wrap;}
+.btn-whatsapp{display:inline-flex;align-items:center;gap:9px;background:#25D366;color:#fff;padding:14px 26px;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;clip-path:polygon(6% 0%,100% 0%,94% 100%,0% 100%);transition:all .3s;border:none;cursor:pointer;font-family:'Rajdhani',sans-serif;text-decoration:none;}
+.btn-whatsapp svg{width:15px;height:15px;}
+.btn-whatsapp:hover{background:#1aa94e;transform:translateY(-2px);box-shadow:0 10px 22px rgba(37,211,102,.25);}
+.form-note{font-size:11px;color:var(--gray);letter-spacing:.5px;margin-top:12px;}
+
+/* ── FOOTER ── */
+footer{background:var(--dark);border-top:1px solid var(--border);padding:58px 6% 30px;}
+.footer-top{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:56px;margin-bottom:44px;}
+.footer-brand p{font-size:13px;color:var(--gray);line-height:1.75;margin-top:16px;}
+.footer-col h4{font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:3px;color:var(--gray-light);margin-bottom:18px;}
+.footer-col ul{list-style:none;}
+.footer-col ul li{margin-bottom:9px;}
+.footer-col ul li a{font-size:13px;color:var(--gray);text-decoration:none;transition:color .3s;letter-spacing:.3px;}
+.footer-col ul li a:hover{color:var(--red);}
+.footer-bottom{display:flex;justify-content:space-between;align-items:center;padding-top:22px;border-top:1px solid var(--border);flex-wrap:wrap;gap:12px;}
+.footer-copy{font-size:11px;color:rgba(155,155,155,.5);letter-spacing:1px;}
+.social-links{display:flex;gap:9px;}
+.social-link{width:33px;height:33px;background:var(--dark3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--gray);text-decoration:none;clip-path:polygon(12% 0%,100% 0%,88% 100%,0% 100%);transition:all .3s;}
+.social-link svg{width:14px;height:14px;}
+.social-link:hover{background:var(--red);border-color:var(--red);color:#fff;}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:30px;right:30px;background:var(--dark3);border:1px solid var(--border-red);border-left:3px solid var(--red);color:var(--white);padding:14px 22px;font-size:13px;font-weight:500;letter-spacing:.5px;z-index:9000;opacity:0;transform:translateY(14px);transition:all .4s;max-width:290px;}
+.toast.show{opacity:1;transform:translateY(0);}
+
+/* ── ANIMATIONS ── */
+/* Reveal base */
+.reveal{opacity:0;transform:translateY(32px);transition:opacity .75s ease,transform .75s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+.reveal-left{opacity:0;transform:translateX(-32px);transition:opacity .75s ease,transform .75s ease;}
+.reveal-left.visible{opacity:1;transform:translateX(0);}
+.reveal-scale{opacity:0;transform:scale(.94);transition:opacity .7s ease,transform .7s ease;}
+.reveal-scale.visible{opacity:1;transform:scale(1);}
+/* Wipe reveal for titles */
+.wipe{position:relative;overflow:hidden;}
+.wipe-inner{display:block;transform:translateY(100%);transition:transform .8s cubic-bezier(.16,1,.3,1);}
+.wipe.visible .wipe-inner{transform:translateY(0);}
+/* Stagger delays */
+.d1{transition-delay:.1s;}.d2{transition-delay:.2s;}.d3{transition-delay:.3s;}
+.d4{transition-delay:.4s;}.d5{transition-delay:.5s;}.d6{transition-delay:.6s;}.d7{transition-delay:.7s;}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1200px){.services-grid{grid-template-columns:repeat(3,1fr);}.about-metrics{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:1024px){.services-grid{grid-template-columns:repeat(2,1fr);}.about-inner{grid-template-columns:1fr;gap:48px;}.about-visual{height:360px;}.gallery-grid{grid-template-columns:1fr 1fr;grid-template-rows:240px 240px 240px;}.gallery-grid .gal-item:first-child{grid-row:auto;}.footer-top{grid-template-columns:1fr 1fr;gap:36px;}.videos-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:768px){.nav-links{display:none;}.nav-toggle{display:flex;}.nav-links.open{display:flex;flex-direction:column;position:fixed;top:70px;left:0;right:0;background:var(--dark2);border-top:1px solid var(--border-red);padding:28px 6%;gap:20px;z-index:999;}section{padding:72px 5%;}.hours-inner{grid-template-columns:1fr;gap:40px;}.booking-inner{grid-template-columns:1fr;gap:36px;}.booking-form{padding:26px 18px;}.form-row{grid-template-columns:1fr;}.time-slots{grid-template-columns:repeat(4,1fr);}.gallery-grid{display:flex;flex-direction:column;}.gallery-grid .gal-item{height:200px;}}
+@media(max-width:540px){.services-grid{grid-template-columns:1fr;}.svc-card{height:250px;}.about-metrics{grid-template-columns:1fr 1fr;}.time-slots{grid-template-columns:repeat(3,1fr);}.footer-top{grid-template-columns:1fr;gap:26px;}.videos-grid{grid-template-columns:1fr 1fr;}}
+</style>
+</head>
+<body>
+
+<!-- SVG Sprite -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+  <defs>
+    <symbol id="ic-zap" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></symbol>
+    <symbol id="ic-filter" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></symbol>
+    <symbol id="ic-droplet-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/><line x1="2" y1="2" x2="22" y2="22"/></symbol>
+    <symbol id="ic-tool" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></symbol>
+    <symbol id="ic-car" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17a2 2 0 1 0 4 0 2 2 0 0 0-4 0M17 17a2 2 0 1 0 4 0 2 2 0 0 0-4 0"/><path d="M1 17v-5l4-9h14l4 9v5H1zM5 12h14"/></symbol>
+    <symbol id="ic-activity" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></symbol>
+    <symbol id="ic-settings" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M4.93 19.07l1.41-1.41M19.07 19.07l-1.41-1.41M4.93 4.93l1.41 1.41M12 2v2M12 20v2M2 12h2M20 12h2"/></symbol>
+    <symbol id="ic-code" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></symbol>
+    <symbol id="ic-arrow-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></symbol>
+    <symbol id="ic-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></symbol>
+    <symbol id="ic-phone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.21 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.12 1h3a2 2 0 0 1 2 1.72A12.84 12.84 0 0 0 8.82 5.5a2 2 0 0 1-.45 2.11L7.09 8.91A16 16 0 0 0 13 14.91l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21 16.92z"/></symbol>
+    <symbol id="ic-instagram" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></symbol>
+    <symbol id="ic-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></symbol>
+    <symbol id="ic-msg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></symbol>
+    <symbol id="ic-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></symbol>
+    <symbol id="ic-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></symbol>
+    <symbol id="ic-award" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></symbol>
+    <symbol id="ic-play" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></symbol>
+    <symbol id="ic-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></symbol>
+  </defs>
+</svg>
+
+<!-- Page loader -->
+<div id="loader"><img src="logo (1).png" alt="SVR Performance" class="loader-logo"></div>
+
+<!-- Scroll progress -->
+<div id="progress"></div>
+
+<!-- Cursor -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#" class="nav-logo">
+    <img src="logo (1).png" alt="SVR" class="nav-logo-img">
+    <div class="nav-logo-text">SVR Performance<small>Nairobi, Kenya</small></div>
+  </a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#gallery">Gallery</a></li>
+    <li><a href="#videos">Videos</a></li>
+    <li><a href="#hours">Hours</a></li>
+    <li><a href="#booking" class="nav-cta">Book Now</a></li>
+  </ul>
+  <button class="nav-toggle" id="navToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+</nav>
+
+<!-- HERO — banner image only, no text -->
+<section class="hero">
+  <div class="hero-bg" id="heroBg"></div>
+  <div class="hero-vignette"></div>
+</section>
+
+<!-- TAGLINE STRIP -->
+<div class="tagline-strip">
+  <p class="tagline-main reveal">Dealer Level Services. <span class="accent">Without</span> the Dealer Level Prices.</p>
+  <div class="tagline-divider"></div>
+  <p class="tagline-sub reveal d1">Nairobi's Premier Automotive Performance Specialists</p>
+</div>
+
+<!-- SERVICES -->
+<section id="services" class="services">
+  <div class="services-top">
+    <div>
+      <div class="sec-eyebrow reveal"><div class="sec-eyebrow-line"></div><span class="sec-eyebrow-text">What We Do</span></div>
+      <h2 class="sec-title reveal d1">Our <span class="light">Services</span></h2>
+    </div>
+    <p class="sec-desc reveal d2" style="max-width:300px;">Comprehensive automotive solutions engineered for peak performance and long-term reliability.</p>
+  </div>
+
+  <div class="services-grid">
+    <!-- 01 ECU Tuning — C63 AMG on dyno -->
+    <div class="svc-card reveal">
+      <div class="svc-img" style="background-image:url('WhatsApp%20Image%202026-04-24%20at%2020.34.54.jpeg');background-position:center 30%;"></div>
+      <div class="svc-gradient"></div>
+      <div class="svc-body">
+        <svg class="svc-icon"><use href="#ic-zap"/></svg>
+        <div class="svc-name">ECU Tuning &amp; Remap</div>
+        <p class="svc-desc">Professional dyno-tested remapping for maximum power, torque and fuel efficiency.</p>
+        <a href="#booking" class="svc-book">Book Now</a>
+      </div>
+      <div class="svc-num">01</div><div class="svc-bar"></div>
+    </div>
+    <!-- 02 DPF/EGR — undercarriage/exhaust from below -->
+    <div class="svc-card reveal d1">
+      <div class="svc-img" style="background-image:url('WhatsApp%20Image%202026-04-24%20at%2020.34.54%20(1).jpeg');"></div>
+      <div class="svc-gradient"></div>
+      <div class="svc-body">
+        <svg class="svc-icon"><use href="#ic-filter"/></svg>
+        <div class="svc-name">DPF / EGR Removal</div>
+        <p class="svc-desc">Expert diesel particulate filter and EGR delete. Performance downpipe and exhaust solutions.</p>
+        <a href="#booking" class="svc-book">Book Now</a>
+      </div>
+      <div class="svc-num">02</div><div class="svc-bar"></div>
+    </div>
+    <!-- 03 Adblue — downpipes -->
+    <div class="svc-card reveal d2">
+      <div class="svc-img" style="background-image:url('WhatsApp%20Image%202026-04-24%20at%2020.11.00.jpeg');"></div>
+      <div class="svc-gradient"></div>
+      <div class="svc-body">
+        <svg class="svc-icon"><use href="#ic-droplet-x"/></svg>
+        <div class="svc-name">Adblue Delete</div>
+        <p class="svc-desc">Professional AdBlue SCR system removal and software bypass for common DEF failures.</p>
+        <a href="#booking" class="svc-book">Book Now</a>
+      </div>
+      <div class="svc-num">03</div><div class="svc-bar"></div>
+    </div>
+    <!-- 04 Maintenance — Lamborghini V8 oil service -->
+    <div class="svc-card reveal d3">
+      <div class="svc-img" style="background-image:url('WhatsApp%20Image%202026-04-24%20at%2020.34.55%20(1).jpeg');"></div>
+      <div class="svc-gradient"></div>
+      <div class="svc-body">
+        <svg class="svc-icon"><use href="#ic-tool"/></svg>
+        <div class="svc-name">Premium Maintenance</div>
+        <p class="svc-desc">Comprehensive servicing for luxury and performance vehicles — oil, filters, brakes and full inspection.</p>
+        <a href="#booking" class="svc-book">Book Now</a>
+      </div>
+      <div class="svc-num">04</div><div class="svc-bar"></div>
+    </div>
+    <!-- 05 Luxury Imports — Maybach convoy -->
+    <div class="svc-card reveal">
+      <div class="svc-img" style="background-image:url('WhatsApp%20Image%202026-04-24%20at%2020.34.54%20(2).jpeg');background-position:center 40%;"></div>
+      <div class="svc-gradient"></div>
+      <div class="svc-body">
+        <svg class="svc-icon"><use href="#ic-car"/></svg>
+        <div class="svc-name">Luxury Vehicle Imports</div>
+        <p class="svc-desc">Sourcing and importing premium vehicles from Japan, UK and UAE. Full compliance and registration.</p>
+        <a href="#booking" class="svc-book">Book Now</a>
+      </div>
+      <div class="svc-num">05</div><div class="svc-bar"></div>
+    </div>
+    <!-- 06 Diagnostics — Blue Lamborghini Urus -->
+    <div class="svc-card reveal d1">
+      <div class="svc-img" style="background-image:url('WhatsApp%20Image%202026-04-24%20at%2020.10.59%20(1).jpeg');"></div>
+      <div class="svc-gradient"></div>
+      <div class="svc-body">
+        <svg class="svc-icon"><use href="#ic-activity"/></svg>
+        <div class="svc-name">Performance Diagnostics</div>
+        <p class="svc-desc">Advanced diagnostic scans. Fault code reading, live data analysis and full system health checks.</p>
+        <a href="#booking" class="svc-book">Book Now</a>
+      </div>
+      <div class="svc-num">06</div><div class="svc-bar"></div>
+    </div>
+    <!-- 07 Suspension — White Lamborghini on lift -->
+    <div class="svc-card reveal d2">
+      <div class="svc-img" style="background-image:url('WhatsApp%20Image%202026-04-24%20at%2020.34.55.jpeg');background-position:center 20%;"></div>
+      <div class="svc-gradient"></div>
+      <div class="svc-body">
+        <svg class="svc-icon"><use href="#ic-settings"/></svg>
+        <div class="svc-name">Suspension &amp; Handling</div>
+        <p class="svc-desc">Coilover installation, alignment, bushings and performance suspension upgrades.</p>
+        <a href="#booking" class="svc-book">Book Now</a>
+      </div>
+      <div class="svc-num">07</div><div class="svc-bar"></div>
+    </div>
+    <!-- 08 Software — AMG steering wheel -->
+    <div class="svc-card reveal d3">
+      <div class="svc-img" style="background-image:url('WhatsApp%20Image%202026-04-24%20at%2020.11.00%20(1).jpeg');background-position:center 30%;"></div>
+      <div class="svc-gradient"></div>
+      <div class="svc-body">
+        <svg class="svc-icon"><use href="#ic-code"/></svg>
+        <div class="svc-name">Software &amp; Programming</div>
+        <p class="svc-desc">Immobiliser programming, key coding, module flashing, steering upgrades and TPMS resets.</p>
+        <a href="#booking" class="svc-book">Book Now</a>
+      </div>
+      <div class="svc-num">08</div><div class="svc-bar"></div>
+    </div>
+  </div>
+
+  <div class="services-cta reveal">
+    <a href="#booking" class="btn-primary"><svg><use href="#ic-arrow-right"/></svg>Book a Service</a>
+    <span class="services-cta-note">or reach us on <a href="https://wa.me/254745333999">WhatsApp</a></span>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about" class="about">
+  <div class="about-inner">
+    <div>
+      <div class="sec-eyebrow reveal-left"><div class="sec-eyebrow-line"></div><span class="sec-eyebrow-text">Why SVR</span></div>
+      <h2 class="sec-title reveal-left d1">Built for Perfection</h2>
+      <p class="sec-desc reveal-left d2">Nairobi's premier performance and customisation specialists — combining European diagnostic tools with decades of hands-on expertise across all major luxury and performance marques.</p>
+      <div class="about-points">
+        <div class="about-point reveal-left d3">
+          <div class="about-point-icon"><svg><use href="#ic-shield"/></svg></div>
+          <div><div class="about-point-title">Advanced Equipment</div><p class="about-point-desc">Professional-grade European diagnostic and tuning tools for precise, reliable results.</p></div>
+        </div>
+        <div class="about-point reveal-left d4">
+          <div class="about-point-icon"><svg><use href="#ic-award"/></svg></div>
+          <div><div class="about-point-title">Certified Technicians</div><p class="about-point-desc">Trained specialists with years of experience across all major vehicle brands.</p></div>
+        </div>
+        <div class="about-point reveal-left d5">
+          <div class="about-point-icon"><svg><use href="#ic-zap"/></svg></div>
+          <div><div class="about-point-title">Performance First</div><p class="about-point-desc">Every service engineered for maximum reliability, longevity and driving performance.</p></div>
+        </div>
+      </div>
+      <div class="about-metrics reveal d4">
+        <div class="about-metric"><div class="about-metric-num" data-count="36" data-suffix=".4K">36<span class="accent">.4K</span></div><div class="about-metric-label">Followers</div></div>
+        <div class="about-metric"><div class="about-metric-num" data-count="384" data-suffix="+">384<span class="accent">+</span></div><div class="about-metric-label">Posts</div></div>
+        <div class="about-metric"><div class="about-metric-num">5<span class="accent">★</span></div><div class="about-metric-label">Rating</div></div>
+        <div class="about-metric"><div class="about-metric-num">8<span class="accent">+</span></div><div class="about-metric-label">Specialties</div></div>
+      </div>
+    </div>
+    <div class="about-visual reveal d1">
+      <div class="about-tag">Elite Specialists</div>
+      <div class="about-img-main"></div>
+      <div class="about-img-accent"></div>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section id="gallery" class="gallery">
+  <div class="gallery-header">
+    <div class="sec-eyebrow reveal"><div class="sec-eyebrow-line"></div><span class="sec-eyebrow-text">Our Work</span></div>
+    <h2 class="sec-title reveal d1">SVR <span class="light">PERFORMANCE</span></h2>
+    <p class="sec-desc reveal d2">Performance cars, luxury builds and custom work straight from our Nairobi workshop.</p>
+  </div>
+  <div class="gallery-grid">
+    <div class="gal-item reveal-scale">
+      <img class="gal-img" src="WhatsApp Image 2026-04-24 at 20.34.55 (2).jpeg" alt="Porsche 911s" loading="lazy">
+      <div class="gal-overlay"><span class="gal-label">Porsche 911 Turbo — Service &amp; Remap</span></div>
+    </div>
+    <div class="gal-item reveal-scale d1">
+      <img class="gal-img" src="WhatsApp Image 2026-04-24 at 20.10.59 (3).jpeg" alt="Mercedes G63" loading="lazy">
+      <div class="gal-overlay"><span class="gal-label">Mercedes G63 AMG</span></div>
+    </div>
+    <div class="gal-item reveal-scale d2">
+      <img class="gal-img" src="WhatsApp Image 2026-04-24 at 20.10.59 (2).jpeg" alt="Audi TT RS" loading="lazy">
+      <div class="gal-overlay"><span class="gal-label">Audi TT RS — ECU Remap</span></div>
+    </div>
+    <div class="gal-item reveal-scale d3">
+      <img class="gal-img" src="WhatsApp Image 2026-04-24 at 20.34.54 (2).jpeg" alt="Luxury Fleet" loading="lazy">
+      <div class="gal-overlay"><span class="gal-label">Client Fleet — Nairobi</span></div>
+    </div>
+    <div class="gal-item reveal-scale d4">
+      <img class="gal-img" src="WhatsApp Image 2026-04-24 at 20.34.54 (3).jpeg" alt="Vinyl Wrap" loading="lazy">
+      <div class="gal-overlay"><span class="gal-label">Vinyl Wrap — Detail Work</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- VIDEOS — Instagram Reels format -->
+<section id="videos" class="videos">
+  <div class="videos-header">
+    <div>
+      <div class="sec-eyebrow reveal"><div class="sec-eyebrow-line"></div><span class="sec-eyebrow-text">In Motion</span></div>
+      <h2 class="sec-title reveal d1">Watch Us <span class="light">Work</span></h2>
+    </div>
+    <p class="sec-desc reveal d2" style="max-width:280px;">Behind the scenes from our workshop — builds, remaps and client cars in action.</p>
+  </div>
+
+  <div class="videos-grid">
+    <!--
+      TO ADD A VIDEO:
+      Option A — Instagram Reel:
+        1. Open the reel on Instagram.com
+        2. Click ··· → Copy link
+        3. The URL looks like: https://www.instagram.com/reel/ABC123xyz/
+        4. Replace data-id="REEL_ID" with the ID (e.g. data-id="ABC123xyz")
+        5. Set data-type="instagram"
+
+      Option B — YouTube:
+        1. Open the video on YouTube
+        2. Copy the ID from the URL after ?v=   (e.g. youtube.com/watch?v=dQw4w9WgXcQ → ID is dQw4w9WgXcQ)
+        3. Replace data-id="VIDEO_ID" with the ID
+        4. Set data-type="youtube"
+    -->
+    <div class="video-wrap reveal" data-type="instagram" data-id="C-5WNNZo444">
+      <div class="video-placeholder">
+        <div class="video-placeholder-bg" style="background-image:url('WhatsApp%20Image%202026-04-24%20at%2020.34.54.jpeg');"></div>
+        <div class="play-btn"><svg><use href="#ic-play"/></svg></div>
+        <div class="video-meta"><div class="video-title">ECU Remap — Dyno Run</div><div class="video-sub">Add video ID above</div></div>
+      </div>
+    </div>
+    <div class="video-wrap reveal d1" data-type="instagram" data-id="DRhekAjjEo8">
+      <div class="video-placeholder">
+        <div class="video-placeholder-bg" style="background-image:url('WhatsApp%20Image%202026-04-24%20at%2020.34.55.jpeg');"></div>
+        <div class="play-btn"><svg><use href="#ic-play"/></svg></div>
+        <div class="video-meta"><div class="video-title">Lamborghini Urus — Full Build</div><div class="video-sub">Add video ID above</div></div>
+      </div>
+    </div>
+    <div class="video-wrap reveal d2" data-type="instagram" data-id="DI6NOIqIvLn">
+      <div class="video-placeholder">
+        <div class="video-placeholder-bg" style="background-image:url('WhatsApp%20Image%202026-04-24%20at%2020.34.55%20(2).jpeg');"></div>
+        <div class="play-btn"><svg><use href="#ic-play"/></svg></div>
+        <div class="video-meta"><div class="video-title">Porsche 911 Turbo — Service</div><div class="video-sub">Add video ID above</div></div>
+      </div>
+    </div>
+    <div class="video-wrap reveal d3" data-type="instagram" data-id="DQo4g4AjfVA">
+      <div class="video-placeholder">
+        <div class="video-placeholder-bg" style="background-image:url('WhatsApp%20Image%202026-04-24%20at%2020.34.54%20(3).jpeg');"></div>
+        <div class="play-btn"><svg><use href="#ic-play"/></svg></div>
+        <div class="video-meta"><div class="video-title">Detail Work — Wrap &amp; Finish</div><div class="video-sub">Add video ID above</div></div>
+      </div>
+    </div>
+  </div>
+
+
+</section>
+
+<!-- HOURS -->
+<section id="hours" class="hours">
+  <div class="hours-inner">
+    <div>
+      <div class="sec-eyebrow reveal"><div class="sec-eyebrow-line"></div><span class="sec-eyebrow-text">Opening Hours</span></div>
+      <h2 class="sec-title reveal d1">When We're Open</h2>
+      <p class="sec-desc reveal d2" style="margin-bottom:0">Visit our Nairobi workshop. We recommend booking in advance to secure your preferred slot.</p>
+      <div class="hours-contact">
+        <div class="contact-item reveal d2"><div class="contact-icon"><svg><use href="#ic-pin"/></svg></div><div><div class="contact-label">Location</div><div class="contact-val">Nairobi, Kenya<br><span style="font-size:12px;color:var(--gray)">Contact us for exact address</span></div></div></div>
+        <div class="contact-item reveal d3"><div class="contact-icon"><svg><use href="#ic-phone"/></svg></div><div><div class="contact-label">WhatsApp / Phone</div><div class="contact-val"><a href="https://wa.me/254745333999">+254 745 333 999</a></div></div></div>
+        <div class="contact-item reveal d4"><div class="contact-icon"><svg><use href="#ic-instagram"/></svg></div><div><div class="contact-label">Instagram</div><div class="contact-val"><a href="https://instagram.com/svr_performance" target="_blank">@svr_performance</a> · 36.4K Followers</div></div></div>
+        <div class="contact-item reveal d5"><div class="contact-icon"><svg><use href="#ic-globe"/></svg></div><div><div class="contact-label">Online Booking</div><div class="contact-val"><a href="https://www.picktime.com/SVRperformancebooking" target="_blank">picktime.com/SVRperformancebooking</a></div></div></div>
+      </div>
+    </div>
+    <div class="hours-table reveal d1">
+      <div class="hours-row"><span class="hours-day">Monday</span><span class="hours-time">08:00 – 18:00 <span class="badge badge-open">Open</span></span></div>
+      <div class="hours-row"><span class="hours-day">Tuesday</span><span class="hours-time">08:00 – 18:00 <span class="badge badge-open">Open</span></span></div>
+      <div class="hours-row"><span class="hours-day">Wednesday</span><span class="hours-time">08:00 – 18:00 <span class="badge badge-open">Open</span></span></div>
+      <div class="hours-row"><span class="hours-day">Thursday</span><span class="hours-time">08:00 – 18:00 <span class="badge badge-open">Open</span></span></div>
+      <div class="hours-row"><span class="hours-day">Friday</span><span class="hours-time">08:00 – 18:00 <span class="badge badge-open">Open</span></span></div>
+      <div class="hours-row"><span class="hours-day">Saturday</span><span class="hours-time">08:00 – 16:00 <span class="badge badge-open">Open</span></span></div>
+      <div class="hours-row"><span class="hours-day">Sunday</span><span class="hours-time">By Appointment <span class="badge badge-limited">Limited</span></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- BOOKING -->
+<section id="booking" class="booking">
+  <div class="booking-inner">
+    <div>
+      <div class="sec-eyebrow reveal"><div class="sec-eyebrow-line"></div><span class="sec-eyebrow-text">Get Started</span></div>
+      <h2 class="sec-title reveal d1">Book a Service</h2>
+      <p class="sec-desc reveal d2">Fill in your details and we'll confirm via WhatsApp. Our team responds within the hour during business hours.</p>
+      <div class="booking-features reveal d3">
+        <div class="booking-feat"><svg><use href="#ic-check"/></svg>Same-day response on WhatsApp</div>
+        <div class="booking-feat"><svg><use href="#ic-check"/></svg>Free initial diagnostic consultation</div>
+        <div class="booking-feat"><svg><use href="#ic-check"/></svg>Flexible 30-minute booking slots</div>
+        <div class="booking-feat"><svg><use href="#ic-check"/></svg>All vehicles welcome</div>
+        <div class="booking-feat"><svg><use href="#ic-check"/></svg>Transparent pricing, no hidden fees</div>
+      </div>
+    </div>
+    <div class="booking-form reveal d2">
+      <div class="form-sec-title">01 — Date &amp; Time</div>
+      <div class="form-row">
+        <div class="form-group"><label for="bookDate">Date <span class="req">*</span></label><input type="date" id="bookDate" min=""></div>
+        <div class="form-group">
+          <label for="bookService">Service Type <span class="req">*</span></label>
+          <select id="bookService">
+            <option value="">Select a service...</option>
+            <option>ECU Tuning / Remap</option><option>DPF Removal</option><option>EGR Delete</option>
+            <option>Adblue Delete</option><option>Premium Maintenance</option>
+            <option>Luxury Vehicle Import</option><option>Performance Diagnostics</option>
+            <option>Suspension &amp; Handling</option><option>Software &amp; Programming</option>
+            <option>Other / Not Sure</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group"><label>Time Slot <span class="req">*</span></label><div class="time-slots" id="timeSlots"></div></div>
+      <div class="form-sec-title">02 — Your Details</div>
+      <div class="form-row">
+        <div class="form-group"><label for="firstName">First Name <span class="req">*</span></label><input type="text" id="firstName" placeholder="e.g. James"></div>
+        <div class="form-group"><label for="lastName">Last Name <span class="req">*</span></label><input type="text" id="lastName" placeholder="e.g. Kamau"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label for="phone">Phone <span class="req">*</span></label><input type="tel" id="phone" placeholder="+254 7XX XXX XXX"></div>
+        <div class="form-group"><label for="email">Email</label><input type="email" id="email" placeholder="you@example.com"></div>
+      </div>
+      <div class="form-sec-title">03 — Vehicle</div>
+      <div class="form-row">
+        <div class="form-group"><label for="vMake">Make <span class="req">*</span></label><input type="text" id="vMake" placeholder="e.g. Toyota"></div>
+        <div class="form-group"><label for="vModel">Model <span class="req">*</span></label><input type="text" id="vModel" placeholder="e.g. Land Cruiser"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label for="vYear">Year <span class="req">*</span></label><input type="number" id="vYear" placeholder="2020" min="1990" max="2026"></div>
+        <div class="form-group"><label for="vReg">Registration</label><input type="text" id="vReg" placeholder="e.g. KDG 123X"></div>
+      </div>
+      <div class="form-sec-title">04 — Notes</div>
+      <div class="form-group"><label for="notes">Additional Notes</label><textarea id="notes" placeholder="Describe any issues, modifications, or questions..."></textarea></div>
+      <div class="form-submit">
+        <button class="btn-primary" id="bookBtn" type="button"><svg><use href="#ic-arrow-right"/></svg>Confirm Booking</button>
+        <a class="btn-whatsapp" id="waBtn" href="#"><svg><use href="#ic-msg"/></svg>WhatsApp</a>
+      </div>
+      <p class="form-note">Details will be sent to SVR Performance via WhatsApp for confirmation.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <a href="#" class="nav-logo"><img src="logo (1).png" alt="SVR" class="nav-logo-img"><div class="nav-logo-text">SVR Performance<small>Nairobi, Kenya</small></div></a>
+      <p>Elite performance &amp; software specialists. Tuning, premium maintenance and luxury vehicle imports — Nairobi's pinnacle of automotive customization.</p>
+    </div>
+    <div class="footer-col"><h4>Services</h4><ul><li><a href="#services">ECU Tuning</a></li><li><a href="#services">DPF / EGR Removal</a></li><li><a href="#services">Adblue Delete</a></li><li><a href="#services">Maintenance</a></li><li><a href="#services">Vehicle Imports</a></li></ul></div>
+    <div class="footer-col"><h4>Company</h4><ul><li><a href="#about">About Us</a></li><li><a href="#gallery">Gallery</a></li><li><a href="#videos">Videos</a></li><li><a href="#hours">Opening Hours</a></li><li><a href="#booking">Book a Service</a></li></ul></div>
+    <div class="footer-col"><h4>Contact</h4><ul><li><a href="https://instagram.com/svr_performance" target="_blank">@svr_performance</a></li><li><a href="https://wa.me/254745333999">WhatsApp Us</a></li><li><a href="https://www.picktime.com/SVRperformancebooking" target="_blank">Online Booking</a></li><li><a href="#">Nairobi, Kenya</a></li></ul></div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2025 SVR Performance. All rights reserved.</div>
+    <div class="social-links">
+      <a href="https://instagram.com/svr_performance" target="_blank" class="social-link"><svg><use href="#ic-instagram"/></svg></a>
+      <a href="https://wa.me/254745333999" class="social-link"><svg><use href="#ic-msg"/></svg></a>
+    </div>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── Page loader ──
+window.addEventListener('load',()=>{
+  setTimeout(()=>document.getElementById('loader').classList.add('done'),700);
+});
+
+// ── Scroll progress bar ──
+const progBar=document.getElementById('progress');
+window.addEventListener('scroll',()=>{
+  const pct=window.scrollY/(document.documentElement.scrollHeight-window.innerHeight);
+  progBar.style.transform=`scaleX(${pct})`;
+  nav.classList.toggle('scrolled',window.scrollY>80);
+},{ passive:true });
+
+// ── Cursor ──
+const cursor=document.getElementById('cursor'),ring=document.getElementById('cursorRing');
+let mx=-100,my=-100,rx=-100,ry=-100;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+(function tick(){cursor.style.left=mx+'px';cursor.style.top=my+'px';rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(tick);})();
+document.querySelectorAll('a,button,.svc-card,.time-slot,.video-placeholder').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cursor.style.width='5px';cursor.style.height='5px';ring.style.width='44px';ring.style.height='44px';});
+  el.addEventListener('mouseleave',()=>{cursor.style.width='9px';cursor.style.height='9px';ring.style.width='30px';ring.style.height='30px';});
+});
+
+// ── Nav ──
+const nav=document.getElementById('navbar');
+document.getElementById('navToggle').addEventListener('click',()=>document.getElementById('navLinks').classList.toggle('open'));
+document.querySelectorAll('.nav-links a').forEach(a=>a.addEventListener('click',()=>document.getElementById('navLinks').classList.remove('open')));
+
+// ── Service card 3D tilt ──
+document.querySelectorAll('.svc-card').forEach(card=>{
+  card.addEventListener('mousemove',e=>{
+    const r=card.getBoundingClientRect();
+    const x=(e.clientX-r.left)/r.width-.5;
+    const y=(e.clientY-r.top)/r.height-.5;
+    card.style.transform=`perspective(900px) rotateY(${x*7}deg) rotateX(${-y*7}deg) translateY(-4px)`;
+  });
+  card.addEventListener('mouseleave',()=>{ card.style.transform=''; });
+});
+
+// ── Date ──
+const today=new Date().toISOString().split('T')[0];
+document.getElementById('bookDate').min=today;
+document.getElementById('bookDate').value=today;
+
+// ── Time slots — ALL clickable ──
+const slots=[];
+for(let h=8;h<18;h++){slots.push(String(h).padStart(2,'0')+':00');if(h<17)slots.push(String(h).padStart(2,'0')+':30');}
+const tsC=document.getElementById('timeSlots');
+let selTime='';
+slots.forEach(t=>{
+  const[hh,mm]=t.split(':'),h24=parseInt(hh);
+  const lbl=(h24>12?h24-12:h24)+':'+mm+(h24>=12?' PM':' AM');
+  const btn=document.createElement('button');
+  btn.textContent=lbl; btn.type='button'; btn.className='time-slot';
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.time-slot').forEach(b=>b.classList.remove('selected'));
+    btn.classList.add('selected'); selTime=t;
+  });
+  tsC.appendChild(btn);
+});
+
+// ── Toast ──
+function toast(msg,d=3500){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),d);}
+
+// ── WA message ──
+function buildMsg(){
+  const d=document.getElementById('bookDate').value,s=document.getElementById('bookService').value,
+    fn=document.getElementById('firstName').value.trim(),ln=document.getElementById('lastName').value.trim(),
+    ph=document.getElementById('phone').value.trim(),em=document.getElementById('email').value.trim(),
+    mk=document.getElementById('vMake').value.trim(),mo=document.getElementById('vModel').value.trim(),
+    yr=document.getElementById('vYear').value.trim(),rg=document.getElementById('vReg').value.trim(),
+    nt=document.getElementById('notes').value.trim();
+  if(!fn||!ph||!mk||!mo||!yr||!s||!selTime||!d) return null;
+  return encodeURIComponent(`Hi SVR Performance!\n\n*Service:* ${s}\n*Date:* ${d}\n*Time:* ${selTime}\n\n*Name:* ${fn} ${ln}\n*Phone:* ${ph}${em?'\n*Email:* '+em:''}\n\n*Vehicle:* ${yr} ${mk} ${mo}${rg?' — '+rg:''}\n\n${nt?'*Notes:* '+nt:''}`);
+}
+document.getElementById('bookBtn').addEventListener('click',()=>{
+  const m=buildMsg();if(!m){toast('Please fill in all required fields and select a time slot.');return;}
+  toast('Booking confirmed — opening WhatsApp...');
+  setTimeout(()=>window.open('https://wa.me/254745333999?text='+m,'_blank'),800);
+});
+document.getElementById('waBtn').addEventListener('click',function(e){
+  e.preventDefault();const m=buildMsg();
+  if(!m){toast('Please fill in all required fields and select a time slot.');return;}
+  window.open('https://wa.me/254745333999?text='+m,'_blank');
+});
+
+// ── Video click handler ──
+document.querySelectorAll('.video-wrap').forEach(wrap=>{
+  const ph=wrap.querySelector('.video-placeholder');
+  if(!ph) return;
+  ph.addEventListener('click',()=>{
+    const type=wrap.dataset.type||'youtube';
+    const id=wrap.dataset.id||'';
+    if(!id||id==='VIDEO_ID'){toast('Add your video ID to the HTML to enable this video.');return;}
+    const iframe=document.createElement('iframe');
+    if(type==='instagram'){
+      iframe.src=`https://www.instagram.com/reel/${id}/embed/`;
+      iframe.allow='autoplay; fullscreen';
+    } else {
+      iframe.src=`https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0`;
+      iframe.allow='autoplay; encrypted-media; fullscreen';
+    }
+    iframe.allowFullscreen=true;
+    iframe.style.cssText='position:absolute;inset:0;width:100%;height:100%;border:none;';
+    ph.remove(); wrap.appendChild(iframe);
+  });
+});
+
+// ── Scroll reveal with IntersectionObserver ──
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){ e.target.classList.add('visible'); obs.unobserve(e.target); }
+  });
+},{threshold:.1});
+document.querySelectorAll('.reveal,.reveal-left,.reveal-scale,.wipe').forEach(el=>obs.observe(el));
+
+// ── Counter animation ──
+function animCount(el,target,suffix){
+  let n=0; const step=target/60;
+  const tick=()=>{
+    n=Math.min(n+step,target);
+    el.innerHTML=Math.floor(n)+'<span class="accent">'+suffix+'</span>';
+    if(n<target) requestAnimationFrame(tick);
+  };
+  tick();
+}
+const metricsObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      document.querySelectorAll('[data-count]').forEach(el=>{
+        animCount(el,parseInt(el.dataset.count),el.dataset.suffix);
+      });
+      metricsObs.disconnect();
+    }
+  });
+},{threshold:.5});
+const metricsEl=document.querySelector('.about-metrics');
+if(metricsEl) metricsObs.observe(metricsEl);
+</script>
+</body>
+</html>
